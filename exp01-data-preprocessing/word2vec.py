@@ -7,11 +7,12 @@ import re
 
 # 下载必要的nltk数据
 nltk.download('punkt')
+nltk.download('punkt_tab')
 
 def preprocess_text(text):
     """文本预处理函数"""
     # 转换为小写
-    text = text.lower()
+    text = str(text).lower()
     # 移除特殊字符
     text = re.sub(r'[^\w\s]', '', text)
     # 分词
@@ -54,37 +55,43 @@ def get_document_vector(text, model):
         return np.mean(vectors, axis=0)
     return np.zeros(model.vector_size)
 
+
 def main():
-    # 加载数据
-    corpus, labels = load_and_preprocess_data('dataset/dev.csv')
-    
-    # 训练Word2Vec模型
-    model = train_word2vec(corpus)
-    
-    # 获取文档向量
-    doc_vectors = []
-    df = pd.read_csv('dataset/dev.csv')
-    for text in df['text']:
-        doc_vector = get_document_vector(text, model)
-        doc_vectors.append(doc_vector)
-    
-    # 转换为numpy数组
-    X = np.array(doc_vectors)
-    y = labels
-    
-    print("文档向量形状:", X.shape)
-    print("标签形状:", y.shape)
-    
-    # 保存模型（可选）
+    # 1. 加载并预处理训练集数据
+    train_corpus, train_labels = load_and_preprocess_data('dataset/train.csv')
+
+    # 2. 训练 Word2Vec 模型（只用训练集）
+    model = train_word2vec(train_corpus)
+
+    # 3. 获取训练集文档向量
+    train_df = pd.read_csv('dataset/train.csv')
+    train_texts = train_df.iloc[:, 1] + " " + train_df.iloc[:, 2]
+    X_train = np.array([get_document_vector(text, model) for text in train_texts])
+    y_train = train_df.iloc[:, 0].values
+
+    print("训练集文档向量形状:", X_train.shape)
+    print("训练集标签形状:", y_train.shape)
+
+    # 4. 获取测试集文档向量
+    test_df = pd.read_csv('dataset/test.csv')
+    test_texts = test_df.iloc[:, 1] + " " + test_df.iloc[:, 2]
+    X_test = np.array([get_document_vector(text, model) for text in test_texts])
+    y_test = test_df.iloc[:, 0].values
+
+    print("测试集文档向量形状:", X_test.shape)
+    print("测试集标签形状:", y_test.shape)
+
+    # 5. 保存模型（可选）
     model.save("word2vec_sentiment.model")
-    
+
     # 示例：查看某些词的相似词
     word = "great"
     if word in model.wv:
         similar_words = model.wv.most_similar(word)
         print(f"\n与'{word}'最相似的词:")
-        for word, score in similar_words:
-            print(f"{word}: {score:.4f}")
+        for w, score in similar_words:
+            print(f"{w}: {score:.4f}")
+
 
 if __name__ == "__main__":
     main()

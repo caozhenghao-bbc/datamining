@@ -1,0 +1,25 @@
+C:\Users\caozh\pytorch_gpu_env\Scripts\python.exe D:\大学\2025-2026秋季学期\数据挖掘与知识处理\data-mining-and-knowledge-processing-main\2025-spring\exp01-data-preprocessing\实验一\word2vec.py 
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\caozh\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package punkt_tab to
+[nltk_data]     C:\Users\caozh\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt_tab is already up-to-date!
+训练集文档向量形状: (3599999, 100)
+训练集标签形状: (3599999,)
+测试集文档向量形状: (399999, 100)
+测试集标签形状: (399999,)
+
+与'great'最相似的词:
+fantastic: 0.8630
+terrific: 0.8502
+good: 0.8192
+wonderful: 0.7979
+fabulous: 0.7723
+nice: 0.7569
+perfect: 0.7557
+awesome: 0.7434
+excellent: 0.7310
+superb: 0.6976
+
+进程已结束，退出代码为 0
